@@ -31,10 +31,22 @@ h2{font-family:'Fraunces',serif;font-size:1.4rem;font-weight:300;font-style:ital
 .card:hover{border-color:#999}
 .card-name{font-weight:500;font-size:0.95rem;margin-bottom:8px}
 .card-desc{font-size:0.85rem;color:var(--fg2);line-height:1.6;margin-bottom:16px}
-.card-footer{display:flex;align-items:center;gap:12px;font-size:0.8rem;color:var(--fg2)}
-.lang-dot{width:8px;height:8px;border-radius:50%;background:#333;display:inline-block}
-.card-link{margin-left:auto;padding:4px 12px;border:1px solid var(--border);border-radius:100px;font-size:0.78rem}
+.card-footer{display:flex;align-items:center;justify-content:flex-end}
+.card-link{padding:4px 12px;border:1px solid var(--border);border-radius:100px;font-size:0.78rem}
 .card-link:hover{background:#f0f0f0}
+/* Education */
+.edu-list{display:flex;flex-direction:column;gap:20px}
+.edu-item{padding:20px 24px;background:var(--card);border:1px solid var(--border);border-radius:12px;position:relative}
+.edu-degree{font-weight:500;font-size:0.95rem;margin-bottom:4px;outline:none;min-width:40px}
+.edu-school{font-size:0.88rem;color:var(--fg2);outline:none;min-width:40px}
+.edu-year{font-size:0.8rem;color:var(--fg2);margin-top:6px;outline:none;min-width:40px}
+[contenteditable]:focus{background:rgba(0,0,0,0.03);border-radius:4px;padding:1px 4px;margin:-1px -4px}
+[contenteditable]:empty:before{content:attr(data-placeholder);color:#bbb;pointer-events:none}
+.edu-actions{display:flex;gap:8px;margin-top:16px}
+.edu-add-btn,.edu-remove-btn{padding:5px 12px;border:1px solid var(--border);border-radius:100px;font-size:0.78rem;background:transparent;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--fg2)}
+.edu-add-btn:hover{background:#f0f0f0}
+.edu-remove-btn:hover{background:#fff0f0;border-color:#f0a0a0;color:#c00}
+.edit-hint{font-size:0.78rem;color:#bbb;margin-bottom:16px;font-style:italic}
 footer{padding:40px 0;font-size:0.82rem;color:var(--fg2)}
 </style>
 </head>
@@ -62,6 +74,21 @@ footer{padding:40px 0;font-size:0.82rem;color:var(--fg2)}
 </section>
 
 <section>
+  <h2>Education</h2>
+  <p class="edit-hint">✏️ Click any field to edit</p>
+  <div class="edu-list" id="edu-list">
+    <div class="edu-item">
+      <div class="edu-degree" contenteditable="true" data-placeholder="Degree / Certification">Bachelor of Science in Computer Science</div>
+      <div class="edu-school" contenteditable="true" data-placeholder="School / Institution">University Name</div>
+      <div class="edu-year" contenteditable="true" data-placeholder="Year or date range">2018 – 2022</div>
+    </div>
+  </div>
+  <div class="edu-actions">
+    <button class="edu-add-btn" onclick="addEdu()">+ Add education</button>
+  </div>
+</section>
+
+<section>
   <h2>Projects</h2>
   <div class="grid">
     ${repos.map(r => `
@@ -69,8 +96,6 @@ footer{padding:40px 0;font-size:0.82rem;color:var(--fg2)}
       <div class="card-name">${r.name}</div>
       <div class="card-desc">${repoDescMap[r.name] || r.description || 'No description.'}</div>
       <div class="card-footer">
-        ${r.language ? `<span class="lang-dot"></span><span>${r.language}</span>` : ''}
-        <span>⭐ ${r.stars}</span>
         <a class="card-link" href="${r.url}" target="_blank">View →</a>
       </div>
     </div>`).join('')}
@@ -79,6 +104,21 @@ footer{padding:40px 0;font-size:0.82rem;color:var(--fg2)}
 
 <footer>Built with Dev Portfolio Generator · <a href="https://github.com/${user.username}">@${user.username}</a></footer>
 </div>
+<script>
+function addEdu() {
+  const list = document.getElementById('edu-list');
+  const item = document.createElement('div');
+  item.className = 'edu-item';
+  item.innerHTML = \`
+    <div class="edu-degree" contenteditable="true" data-placeholder="Degree / Certification"></div>
+    <div class="edu-school" contenteditable="true" data-placeholder="School / Institution"></div>
+    <div class="edu-year" contenteditable="true" data-placeholder="Year or date range"></div>
+    <button class="edu-remove-btn" onclick="this.closest('.edu-item').remove()" style="margin-top:12px">✕ Remove</button>
+  \`;
+  list.appendChild(item);
+  item.querySelector('[contenteditable]').focus();
+}
+</script>
 </body>
 </html>`;
 }

@@ -40,11 +40,25 @@ h2::before{content:'';width:24px;height:2px;background:linear-gradient(90deg,var
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
 .card{padding:24px;transition:transform 0.2s,border-color 0.2s}
 .card:hover{transform:translateY(-4px);border-color:rgba(124,106,251,0.4)}
-.card-lang{display:inline-block;padding:3px 10px;border-radius:100px;background:rgba(124,106,251,0.15);border:1px solid rgba(124,106,251,0.3);font-size:0.75rem;color:var(--accent);margin-bottom:12px}
 .card-name{font-size:1rem;font-weight:500;margin-bottom:8px}
 .card-desc{font-size:0.85rem;color:var(--fg2);line-height:1.7;margin-bottom:16px}
-.card-footer{display:flex;align-items:center;gap:12px;font-size:0.82rem;color:var(--fg2)}
-.card-link{margin-left:auto;padding:6px 14px;border-radius:100px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:0.8rem;font-weight:500}
+.card-footer{display:flex;align-items:center;justify-content:flex-end}
+.card-link{padding:6px 14px;border-radius:100px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:0.8rem;font-weight:500}
+/* Education */
+.edu-list{display:flex;flex-direction:column;gap:12px}
+.edu-item{padding:20px 24px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.edu-left{flex:1}
+.edu-degree{font-size:0.95rem;font-weight:500;color:var(--fg);outline:none;min-width:40px;display:block;margin-bottom:5px}
+.edu-school{font-size:0.85rem;color:var(--fg2);outline:none;min-width:40px;display:block}
+.edu-year{font-size:0.82rem;color:var(--accent);background:rgba(124,106,251,0.12);border:1px solid rgba(124,106,251,0.25);border-radius:100px;padding:3px 12px;white-space:nowrap;outline:none;min-width:40px;text-align:center}
+[contenteditable]:focus{background:rgba(124,106,251,0.08);outline:1px solid rgba(124,106,251,0.4);border-radius:6px;padding:2px 6px}
+[contenteditable]:empty:before{content:attr(data-placeholder);color:rgba(255,255,255,0.2);pointer-events:none}
+.edu-year:focus{border-radius:100px}
+.edu-actions{margin-top:14px;display:flex;gap:10px}
+.edu-add-btn,.edu-remove-btn{padding:7px 18px;border-radius:100px;background:var(--glass);border:1px solid var(--border);color:var(--fg2);font-family:'Outfit',sans-serif;font-size:0.82rem;cursor:pointer}
+.edu-add-btn:hover{border-color:var(--accent);color:var(--accent)}
+.edu-remove-btn:hover{border-color:rgba(224,64,251,0.5);color:var(--accent2)}
+.edit-hint{font-size:0.8rem;color:rgba(255,255,255,0.2);margin-bottom:16px;letter-spacing:0.5px}
 footer{padding:40px 0;text-align:center;font-size:0.82rem;color:var(--fg2);border-top:1px solid var(--border)}
 </style>
 </head>
@@ -80,16 +94,30 @@ footer{padding:40px 0;text-align:center;font-size:0.82rem;color:var(--fg2);borde
 </section>
 
 <section>
+  <h2>Education</h2>
+  <p class="edit-hint">✏ Click any field to edit live</p>
+  <div class="edu-list" id="edu-list">
+    <div class="edu-item glass">
+      <div class="edu-left">
+        <span class="edu-degree" contenteditable="true" data-placeholder="Degree / Certification">Bachelor of Science in Computer Science</span>
+        <span class="edu-school" contenteditable="true" data-placeholder="School / Institution">University Name</span>
+      </div>
+      <span class="edu-year" contenteditable="true" data-placeholder="Year">2018 – 2022</span>
+    </div>
+  </div>
+  <div class="edu-actions">
+    <button class="edu-add-btn" onclick="addEdu()">+ Add education</button>
+  </div>
+</section>
+
+<section>
   <h2>Projects</h2>
   <div class="grid">
     ${repos.map(r => `
     <div class="card glass">
-      ${r.language ? `<span class="card-lang">${r.language}</span>` : ''}
       <div class="card-name">${r.name}</div>
       <div class="card-desc">${repoDescMap[r.name] || r.description || 'No description.'}</div>
       <div class="card-footer">
-        <span>⭐ ${r.stars}</span>
-        <span>🍴 ${r.forks}</span>
         <a class="card-link" href="${r.url}" target="_blank">View →</a>
       </div>
     </div>`).join('')}
@@ -98,6 +126,25 @@ footer{padding:40px 0;text-align:center;font-size:0.82rem;color:var(--fg2);borde
 
 <footer>Built with Dev Portfolio Generator · <a href="https://github.com/${user.username}">@${user.username}</a></footer>
 </div>
+<script>
+function addEdu() {
+  const list = document.getElementById('edu-list');
+  const item = document.createElement('div');
+  item.className = 'edu-item glass';
+  item.innerHTML = \`
+    <div class="edu-left">
+      <span class="edu-degree" contenteditable="true" data-placeholder="Degree / Certification"></span>
+      <span class="edu-school" contenteditable="true" data-placeholder="School / Institution"></span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <span class="edu-year" contenteditable="true" data-placeholder="Year"></span>
+      <button class="edu-remove-btn" onclick="this.closest('.edu-item').remove()">✕ Remove</button>
+    </div>
+  \`;
+  list.appendChild(item);
+  item.querySelector('[contenteditable]').focus();
+}
+</script>
 </body>
 </html>`;
 }

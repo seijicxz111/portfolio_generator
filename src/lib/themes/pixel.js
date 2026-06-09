@@ -38,11 +38,23 @@ h2::before{content:'> '}
 .card:hover{border-color:var(--accent)}
 .card-name{font-family:'Press Start 2P',monospace;font-size:0.6rem;color:var(--accent);margin-bottom:10px;letter-spacing:1px}
 .card-desc{font-size:1rem;color:var(--fg);line-height:1.5;margin-bottom:14px}
-.card-footer{display:flex;align-items:center;gap:12px;font-size:0.9rem;color:var(--fg2)}
-.card-link{margin-left:auto;color:var(--accent);border:1px solid var(--accent);padding:2px 10px}
-.hp-bar{display:inline-block;width:60px;height:8px;background:var(--border);position:relative;vertical-align:middle}
-.hp-fill{height:100%;background:var(--accent)}
-footer{padding:32px 0;font-size:0.9rem;color:var(--border);border-top:2px dashed var(--border)}
+.card-footer{display:flex;align-items:center;justify-content:flex-end}
+.card-link{color:var(--accent);border:1px solid var(--accent);padding:2px 10px;font-size:0.9rem}
+/* Education */
+.edu-list{display:flex;flex-direction:column;gap:14px}
+.edu-item{background:var(--card);border:2px solid var(--border);padding:18px 20px;position:relative}
+.edu-item::after{content:'';position:absolute;bottom:-4px;right:-4px;width:100%;height:100%;border:2px solid var(--fg2);z-index:-1}
+.edu-degree{font-family:'Press Start 2P',monospace;font-size:0.55rem;color:var(--accent);letter-spacing:1px;margin-bottom:8px;outline:none;min-width:40px}
+.edu-school{font-size:1rem;color:var(--fg2);outline:none;min-width:40px}
+.edu-year{font-size:0.9rem;color:var(--border);margin-top:4px;outline:none;min-width:40px;filter:brightness(2)}
+[contenteditable]:focus{background:rgba(170,255,0,0.07);outline:1px dashed var(--accent);padding:1px 4px}
+[contenteditable]:empty:before{content:attr(data-placeholder);color:#3a5a3a;pointer-events:none}
+.edu-actions{margin-top:14px;display:flex;gap:8px}
+.edu-add-btn,.edu-remove-btn{padding:5px 14px;border:2px solid var(--fg2);background:var(--card);color:var(--fg2);font-family:'VT323',monospace;font-size:1rem;cursor:pointer;letter-spacing:1px}
+.edu-add-btn:hover{border-color:var(--accent);color:var(--accent)}
+.edu-remove-btn:hover{border-color:#ff4444;color:#ff4444}
+.edit-hint{font-size:0.85rem;color:#3a5a3a;margin-bottom:14px}
+footer{padding:32px 0;font-size:0.9rem;color:var(--border);border-top:2px dashed var(--border);filter:brightness(2)}
 footer span{color:var(--fg2)}
 </style>
 </head>
@@ -72,6 +84,21 @@ footer span{color:var(--fg2)}
 </section>
 
 <section>
+  <h2>EDUCATION</h2>
+  <p class="edit-hint">// CLICK ANY FIELD TO EDIT</p>
+  <div class="edu-list" id="edu-list">
+    <div class="edu-item">
+      <div class="edu-degree" contenteditable="true" data-placeholder="DEGREE / CERT">B.SC COMPUTER SCIENCE</div>
+      <div class="edu-school" contenteditable="true" data-placeholder="School / Institution">University Name</div>
+      <div class="edu-year" contenteditable="true" data-placeholder="Year range">2018 – 2022</div>
+    </div>
+  </div>
+  <div class="edu-actions">
+    <button class="edu-add-btn" onclick="addEdu()">[ + ADD ]</button>
+  </div>
+</section>
+
+<section>
   <h2>PROJECTS</h2>
   <div class="grid">
     ${repos.map(r => `
@@ -79,8 +106,6 @@ footer span{color:var(--fg2)}
       <div class="card-name">${r.name}</div>
       <div class="card-desc">${repoDescMap[r.name] || r.description || 'No description.'}</div>
       <div class="card-footer">
-        ${r.language ? `<span>${r.language}</span>` : ''}
-        <span>⭐${r.stars}</span>
         <a class="card-link" href="${r.url}" target="_blank">OPEN</a>
       </div>
     </div>`).join('')}
@@ -89,6 +114,21 @@ footer span{color:var(--fg2)}
 
 <footer>// BUILT WITH DEV PORTFOLIO GENERATOR &nbsp;|&nbsp; <span>@${user.username}</span></footer>
 </div>
+<script>
+function addEdu() {
+  const list = document.getElementById('edu-list');
+  const item = document.createElement('div');
+  item.className = 'edu-item';
+  item.innerHTML = \`
+    <div class="edu-degree" contenteditable="true" data-placeholder="DEGREE / CERT"></div>
+    <div class="edu-school" contenteditable="true" data-placeholder="School / Institution"></div>
+    <div class="edu-year" contenteditable="true" data-placeholder="Year range"></div>
+    <button class="edu-remove-btn" onclick="this.closest('.edu-item').remove()" style="margin-top:10px">[ X REMOVE ]</button>
+  \`;
+  list.appendChild(item);
+  item.querySelector('[contenteditable]').focus();
+}
+</script>
 </body>
 </html>`;
 }

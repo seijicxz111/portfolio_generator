@@ -17,7 +17,6 @@ body{font-family:'IBM Plex Mono',monospace;background:var(--bg);color:var(--fg);
 a{color:inherit;text-decoration:none}
 .container{max-width:900px;margin:0 auto;padding:0 20px}
 header{border-bottom:4px solid var(--fg);padding:40px 0;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:start}
-.header-left{}
 .name{font-family:'Bebas Neue',sans-serif;font-size:5rem;line-height:0.9;letter-spacing:-1px;margin-bottom:16px}
 .name span{color:var(--accent)}
 .tagline{font-size:0.85rem;text-transform:uppercase;letter-spacing:3px;color:#555;margin-bottom:16px;border-left:3px solid var(--accent);padding-left:12px}
@@ -41,8 +40,22 @@ h2::after{content:'';flex:1;height:3px;background:var(--fg)}
 .card-num{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#ddd;margin-bottom:8px;line-height:1}
 .card-name{font-size:0.85rem;text-transform:uppercase;letter-spacing:2px;font-weight:500;margin-bottom:10px}
 .card-desc{font-size:0.8rem;line-height:1.7;margin-bottom:16px;opacity:0.7}
-.card-footer{display:flex;align-items:center;gap:12px;font-size:0.75rem;text-transform:uppercase}
-.card-link{margin-left:auto;padding:4px 12px;border:1px solid currentColor;font-size:0.7rem;letter-spacing:1px}
+.card-footer{display:flex;align-items:center;justify-content:flex-end}
+.card-link{padding:4px 12px;border:1px solid currentColor;font-size:0.7rem;letter-spacing:1px}
+/* Education */
+.edu-list{display:flex;flex-direction:column;gap:0}
+.edu-item{border:2px solid var(--fg);margin-bottom:-2px;padding:20px 24px;background:var(--card);display:grid;grid-template-columns:1fr auto;align-items:start;gap:16px}
+.edu-left{}
+.edu-degree{font-size:0.82rem;text-transform:uppercase;letter-spacing:2px;font-weight:500;outline:none;min-width:40px;display:block;margin-bottom:6px}
+.edu-school{font-size:0.78rem;color:#555;outline:none;min-width:40px;display:block}
+.edu-year{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1px;color:#ccc;outline:none;min-width:40px;text-align:right}
+[contenteditable]:focus{background:rgba(255,45,0,0.05);outline:2px solid var(--accent);padding:1px 4px}
+[contenteditable]:empty:before{content:attr(data-placeholder);color:#bbb;pointer-events:none;font-weight:400;letter-spacing:0}
+.edu-actions{margin-top:12px;display:flex;gap:0}
+.edu-add-btn,.edu-remove-btn{padding:8px 16px;border:2px solid var(--fg);background:transparent;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;cursor:pointer;margin-right:-2px}
+.edu-add-btn:hover{background:var(--fg);color:var(--bg)}
+.edu-remove-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.edit-hint{font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:#999;margin-bottom:16px}
 footer{padding:32px 0;font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:#777;display:flex;justify-content:space-between}
 </style>
 </head>
@@ -74,6 +87,23 @@ footer{padding:32px 0;font-size:0.75rem;text-transform:uppercase;letter-spacing:
 </section>
 
 <section>
+  <h2>Education</h2>
+  <p class="edit-hint">✏ Click any field to edit</p>
+  <div class="edu-list" id="edu-list">
+    <div class="edu-item">
+      <div class="edu-left">
+        <span class="edu-degree" contenteditable="true" data-placeholder="Degree / Certification">Bachelor of Science in Computer Science</span>
+        <span class="edu-school" contenteditable="true" data-placeholder="School / Institution">University Name</span>
+      </div>
+      <span class="edu-year" contenteditable="true" data-placeholder="2020">2018–2022</span>
+    </div>
+  </div>
+  <div class="edu-actions">
+    <button class="edu-add-btn" onclick="addEdu()">+ Add</button>
+  </div>
+</section>
+
+<section>
   <h2>Work</h2>
   <div class="grid">
     ${repos.map((r, i) => `
@@ -82,8 +112,6 @@ footer{padding:32px 0;font-size:0.75rem;text-transform:uppercase;letter-spacing:
       <div class="card-name">${r.name}</div>
       <div class="card-desc">${repoDescMap[r.name] || r.description || 'No description.'}</div>
       <div class="card-footer">
-        ${r.language ? `<span>${r.language}</span>` : ''}
-        <span>★ ${r.stars}</span>
         <a class="card-link" href="${r.url}" target="_blank">View ↗</a>
       </div>
     </div>`).join('')}
@@ -95,6 +123,27 @@ footer{padding:32px 0;font-size:0.75rem;text-transform:uppercase;letter-spacing:
   <span>Built with Dev Portfolio Generator</span>
 </footer>
 </div>
+<script>
+function addEdu() {
+  const list = document.getElementById('edu-list');
+  const item = document.createElement('div');
+  item.className = 'edu-item';
+  item.innerHTML = \`
+    <div class="edu-left">
+      <span class="edu-degree" contenteditable="true" data-placeholder="Degree / Certification"></span>
+      <span class="edu-school" contenteditable="true" data-placeholder="School / Institution"></span>
+    </div>
+    <span class="edu-year" contenteditable="true" data-placeholder="Year"></span>
+  \`;
+  const removeBtn = document.createElement('button');
+  removeBtn.className = 'edu-remove-btn';
+  removeBtn.textContent = '✕ Remove';
+  removeBtn.onclick = () => item.remove();
+  item.appendChild(removeBtn);
+  list.appendChild(item);
+  item.querySelector('[contenteditable]').focus();
+}
+</script>
 </body>
 </html>`;
 }
