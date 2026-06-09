@@ -1,9 +1,9 @@
 <script>
   import { goto } from '$app/navigation';
 
-  let username = '';
-  let loading = false;
-  let error = '';
+  let username = $state('');
+  let loading = $state(false);
+  let error = $state('');
 
   async function generate() {
     if (!username.trim()) return;
@@ -50,7 +50,7 @@
     <div class="hero-inner">
       <div class="badge">✦ Free · Open · Exportable</div>
       <h1>Turn your GitHub into a <em>real portfolio.</em></h1>
-      <p class="sub">Enter your GitHub username — we fetch your repos, write your bio with AI, let you pick a theme, and export a fully ownable website. No lock-in. No account needed.</p>
+      <p class="sub">Enter your GitHub username, we fetch your repos, write your bio with AI, let you pick a theme, and export a fully ownable website. No lock-in. No account needed.</p>
 
       <div class="input-group">
         <span class="gh-icon">
@@ -108,8 +108,6 @@
 </main>
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Karla:wght@300;400;500&display=swap');
-
   :global(body) {
     margin: 0;
     background: #0a0b10;
@@ -149,13 +147,15 @@
     width: 600px;
     height: 600px;
     background: radial-gradient(circle, rgba(130, 100, 255, 0.15) 0%, transparent 70%);
-    pointer-events: none; /* ADD THIS */
+    pointer-events: none;
   }
 
   .hero-inner {
     max-width: 620px;
     width: 100%;
     text-align: center;
+    position: relative;
+    z-index: 2;
   }
 
   .badge {

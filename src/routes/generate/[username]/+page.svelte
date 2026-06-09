@@ -1,14 +1,11 @@
 <script>
-  import { page } from '$app/stores';
-  import { browser } from '$app/environment';
-  import { onMount } from 'svelte';
   import { exportPortfolio } from '$lib/exportZip.js';
   import { minimal } from '$lib/themes/minimal.js';
   import { pixel } from '$lib/themes/pixel.js';
   import { brutalist } from '$lib/themes/brutalist.js';
   import { glassmorphism } from '$lib/themes/glassmorphism.js';
 
-  export let data;
+  let { data } = $props();
 
   const THEMES = [
     { id: 'minimal', label: 'Minimal', desc: 'Clean & editorial', icon: '◻' },
@@ -19,13 +16,13 @@
 
   const GENERATORS = { minimal, pixel, brutalist, glassmorphism };
 
-  let selectedTheme = 'minimal';
-  let exporting = false;
-  let previewHtml = '';
+  let selectedTheme = $state('minimal');
+  let exporting = $state(false);
+  let previewHtml = $state('');
 
-  $: if (data && !data.error) {
+  $effect(() => {
     previewHtml = GENERATORS[selectedTheme](data);
-  }
+  });
 
   async function handleExport() {
     exporting = true;
@@ -69,7 +66,7 @@
             <button
               class="theme-btn"
               class:active={selectedTheme === theme.id}
-              on:click={() => selectedTheme = theme.id}
+              onclick={() => selectedTheme = theme.id}
             >
               <span class="theme-icon">{theme.icon}</span>
               <div>
@@ -97,7 +94,7 @@
           {/each}
         </div>
 
-        <button class="export-btn" on:click={handleExport} disabled={exporting}>
+        <button class="export-btn" onclick={handleExport} disabled={exporting}>
           {#if exporting}
             <span class="spinner"></span> Packing...
           {:else}
@@ -115,7 +112,7 @@
           <span></span><span></span><span></span>
         </div>
         <div class="preview-url">portfolio-preview — {selectedTheme}</div>
-        <button class="open-btn" on:click={() => {
+        <button class="open-btn" onclick={() => {
           const w = window.open('', '_blank');
           w.document.write(previewHtml);
           w.document.close();
